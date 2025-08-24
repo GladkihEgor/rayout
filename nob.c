@@ -21,3 +21,6 @@ int main(int argc, char **argv)
 
   return 0;
 }
+
+// TODO: update `nob.h`
+// TODO: add `-r` flag for autorun

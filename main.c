@@ -23,7 +23,7 @@ int main()
     ball.y += dt * velocity_y;
 
     if (IsKeyDown(KEY_RIGHT) && bar.x + bar.width < window_w) bar.x += dt * 100;
-    else if (IsKeyDown(KEY_LEFT)  && bar.x > 0) bar.x -= dt * 100;
+    else if (IsKeyDown(KEY_LEFT) && bar.x > 0) bar.x -= dt * 100;
 
 	BeginDrawing();
     ClearBackground(BLACK);
@@ -34,3 +34,6 @@ int main()
 
 	return 0;
 }
+
+// TODO: bug if ball will collide with the bar on the side
+// TODO: make all sizes relative on window size
