@@ -17,10 +17,9 @@ int main(int argc, char **argv)
   cmd_append(&cmd, "-I./raylib-5.5_macos/include");
   cmd_append(&cmd, "-L./raylib-5.5_macos/lib", "-lraylib");
   cmd_append(&cmd, "-Wl,-rpath,./raylib-5.5_macos/lib");
-  if (!cmd_run_sync_and_reset(&cmd)) return 1;
+  if (!cmd_run(&cmd)) return 1;
 
   return 0;
 }
 
-// TODO: update `nob.h`
 // TODO: add `-r` flag for autorun
