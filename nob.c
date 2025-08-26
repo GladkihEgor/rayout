@@ -6,6 +6,14 @@
 int main(int argc, char **argv)
 {
   NOB_GO_REBUILD_URSELF(argc, argv);
+  char *nob = shift(argv, argc);
+  bool run = false;
+
+  while (argc > 0) {
+    char *arg = shift(argv, argc);
+    if (strcmp("run", arg) == 0) run = true;
+  }
+
 
   Cmd cmd = {0};
 
@@ -19,7 +27,10 @@ int main(int argc, char **argv)
   cmd_append(&cmd, "-Wl,-rpath,./raylib-5.5_macos/lib");
   if (!cmd_run(&cmd)) return 1;
 
+  if (run) {
+    cmd_append(&cmd, "./rayout");
+    if (!cmd_run(&cmd)) return 1;
+  }
+
   return 0;
 }
-
-// TODO: add `-r` flag for autorun
