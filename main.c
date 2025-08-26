@@ -12,8 +12,8 @@ int main()
 	int window_h = 600;
 	Rectangle bar = {.x=0, .y=window_h-20, .width=100, .height=20};
 	Ball ball = {.center = {.x = 10, .y = 10}, .radius = 10};
-	float velocity_x = 100;
-	float velocity_y = 100;
+	float velocity_x = 200;
+	float velocity_y = 200;
 
   InitWindow(window_w, window_h, "rayout");
   SetTargetFPS(60);
@@ -27,8 +27,8 @@ int main()
     ball.center.x += dt * velocity_x;
     ball.center.y += dt * velocity_y;
 
-    if (IsKeyDown(KEY_RIGHT) && bar.x + bar.width < window_w) bar.x += dt * 100;
-    else if (IsKeyDown(KEY_LEFT) && bar.x > 0) bar.x -= dt * 100;
+    if (IsKeyDown(KEY_RIGHT) && bar.x + bar.width < window_w) bar.x += dt * 250;
+    else if (IsKeyDown(KEY_LEFT) && bar.x > 0) bar.x -= dt * 250;
 
 	BeginDrawing();
     ClearBackground(BLACK);
