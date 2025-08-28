@@ -22,7 +22,7 @@ int main(int argc, char **argv)
   if (release) {
     nob_cc(&cmd);
     nob_cc_flags(&cmd);
-    cmd_append(&cmd, "-O3");
+    cmd_append(&cmd,"-O3");
     nob_cc_output(&cmd, "rayout");
     nob_cc_inputs(&cmd, "main.c", "rayout.c");
 
@@ -33,7 +33,7 @@ int main(int argc, char **argv)
   } else {
     nob_cc(&cmd);
     nob_cc_flags(&cmd);
-    cmd_append(&cmd, "-dynamiclib", "-ggdb");
+    cmd_append(&cmd,"-dynamiclib", "-fPIC", "-ggdb");
     nob_cc_output(&cmd, "librayout.dylib");
     nob_cc_inputs(&cmd, "rayout.c");
     cmd_append(&cmd, "-I./raylib-5.5_macos/include");
@@ -42,13 +42,12 @@ int main(int argc, char **argv)
     
     nob_cc(&cmd);
     nob_cc_flags(&cmd);
-    cmd_append(&cmd, "-ggdb");
+    cmd_append(&cmd,"-ggdb");
     nob_cc_output(&cmd, "rayout");
     nob_cc_inputs(&cmd, "main.c");
     cmd_append(&cmd, "-I./raylib-5.5_macos/include");
     cmd_append(&cmd, "-L./raylib-5.5_macos/lib", "-lraylib");
     cmd_append(&cmd, "-Wl,-rpath,./raylib-5.5_macos/lib");
-    cmd_append(&cmd, "-L.", "-lrayout");
     if (!cmd_run(&cmd)) return 1;
   }
 
