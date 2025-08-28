@@ -1,5 +1,14 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <raylib.h>
+
+#define WINDOW_W      800
+#define WINDOW_H      600
+#define TARGET_ROWS   3
+#define TARGET_COLS   5
+#define TARGETS_X     (WINDOW_W / 6)
+#define TARGETS_Y     (WINDOW_H / 10)
+#define TARGETS_COUNT (TARGET_ROWS * TARGET_COLS)
 
 typedef struct {
 	Vector2 center;
@@ -11,61 +20,86 @@ typedef struct {
 	bool alive;
 } Target;
 
-void fill_targets(Target *targets, int rows, int cols, int w, int h, int x, int y, int padding)
+typedef struct {
+	Rectangle bar;
+	Ball ball;
+	float ball_velocity_x;
+	float ball_velocity_y;
+	Target *targets;
+} State;
+
+void init_targets(Target *targets, int rows, int cols, int w, int h, int x, int y, int padding)
 {
 	for (int r = 0; r < rows; r += 1)
 		for (int c = 0; c < cols; c += 1)	
 			targets[r*cols + c] = (Target){.rect = {.x = c*(w + padding) + x, .y = r*(h + padding) + y, .width = w, .height = h}, .alive = true};
 }
 
+State init_state()
+{
+	State state = {0};
+	Rectangle bar = {.x=0, .y=WINDOW_H-20, .width=100, .height=20};
+	state.bar = bar;
+	Ball ball = {.center = {.x = WINDOW_W/2, .y = WINDOW_H-bar.height-10}, .radius = 10};
+	state.ball = ball;
+	state.targets = malloc(TARGETS_COUNT * sizeof(Target));
+	init_targets(state.targets, TARGET_ROWS, TARGET_COLS, 100, 20, TARGETS_X, TARGETS_Y, 10);
+	state.ball_velocity_x = 200;
+	state.ball_velocity_y = 200;
+	return state;
+}
+
+void release_state(State *s)
+{
+	if (s->targets != NULL) {
+		free(s->targets);
+		s->targets = NULL;
+	}
+}
+
+void update_state(State *s, float dt)
+{
+	bool ball_hit_bar = CheckCollisionCircleRec(s->ball.center, s->ball.radius, s->bar);
+  if (s->ball.center.x + s->ball.radius >= WINDOW_W || s->ball.center.x - s->ball.radius <= 0) s->ball_velocity_x *= -1;
+  if (s->ball.center.y + s->ball.radius >= WINDOW_H || s->ball.center.y - s->ball.radius <= 0 || ball_hit_bar) s->ball_velocity_y *= -1;
+  s->ball.center.x += dt * s->ball_velocity_x;
+  s->ball.center.y += dt * s->ball_velocity_y;
+
+  if (IsKeyDown(KEY_RIGHT) && s->bar.x + s->bar.width < WINDOW_W) s->bar.x += dt * 250;
+  else if (IsKeyDown(KEY_LEFT) && s->bar.x > 0) s->bar.x -= dt * 250;
+
+  for (int i = 0; i < TARGETS_COUNT; i += 1)
+  	if (s->targets[i].alive && CheckCollisionCircleRec(s->ball.center, s->ball.radius, s->targets[i].rect)) {
+  		s->targets[i].alive = false;
+			s->ball_velocity_y *= -1;
+  	}
+}
+
+void render(const State *s)
+{
+  ClearBackground(BLACK);
+  for (int i = 0; i < TARGETS_COUNT; i += 1)
+  	if (s->targets[i].alive)
+	    DrawRectangleRec(s->targets[i].rect, WHITE);
+  DrawRectangleRec(s->bar, GREEN);
+	DrawCircleV(s->ball.center, s->ball.radius, RED);
+}
+
 int main()
 {
-	int window_w = 800;
-	int window_h = 600;
-	int target_rows = 3;
-	int target_cols = 5;
-	int targets_x = window_w / 6;
-	int targets_y = window_h / 10;
-	int targets_count = target_rows * target_cols;
-	Rectangle bar = {.x=0, .y=window_h-20, .width=100, .height=20};
-	Ball ball = {.center = {.x = window_w/2, .y = window_h-bar.height-10}, .radius = 10};
-	Target targets[targets_count];
-	fill_targets((Target *)&targets, target_rows, target_cols, 100, 20, targets_x, targets_y, 10);
-	float velocity_x = 200;
-	float velocity_y = 200;
-
-  InitWindow(window_w, window_h, "rayout");
+	State state = init_state();
+  InitWindow(WINDOW_W, WINDOW_H, "rayout");
   SetTargetFPS(60);
   while (!WindowShouldClose()) {
-		window_w = GetScreenWidth();
-		window_h = GetScreenHeight();
     float dt = GetFrameTime();
-		bool ball_hit_bar = CheckCollisionCircleRec(ball.center, ball.radius, bar);
-    if (ball.center.x + ball.radius >= window_w || ball.center.x - ball.radius <= 0) velocity_x *= -1;
-    if (ball.center.y + ball.radius >= window_h || ball.center.y - ball.radius <= 0 || ball_hit_bar) velocity_y *= -1;
-    ball.center.x += dt * velocity_x;
-    ball.center.y += dt * velocity_y;
-
-    if (IsKeyDown(KEY_RIGHT) && bar.x + bar.width < window_w) bar.x += dt * 250;
-    else if (IsKeyDown(KEY_LEFT) && bar.x > 0) bar.x -= dt * 250;
-
-    for (int i = 0; i < targets_count; i += 1)
-    	if (targets[i].alive && CheckCollisionCircleRec(ball.center, ball.radius, targets[i].rect)) {
-    		targets[i].alive = false;
-				velocity_y *= -1;
-    	}
+    update_state(&state, dt);
     
-
 	BeginDrawing();
-    ClearBackground(BLACK);
-    for (int i = 0; i < targets_count; i += 1)
-    	if (targets[i].alive)
-		    DrawRectangleRec(targets[i].rect, WHITE);
-    DrawRectangleRec(bar, GREEN);
-		DrawCircleV(ball.center, ball.radius, RED);
+		render(&state);
 	EndDrawing();
   }
 
+  release_state(&state);
 	return 0;
 }
 
