@@ -13,21 +13,21 @@
 #define TARGETS_COUNT (TARGET_ROWS * TARGET_COLS)
 
 typedef struct {
-	Vector2 center;
-	float radius;
+  Vector2 center;
+  float radius;
 } Ball;
 
 typedef struct {
-	Rectangle rect;
-	bool alive;
+  Rectangle rect;
+  bool alive;
 } Target;
 
 typedef struct {
-	Rectangle bar;
-	Ball ball;
-	float ball_velocity_x;
-	float ball_velocity_y;
-	Target *targets;
+  Rectangle bar;
+  Ball ball;
+  float ball_velocity_x;
+  float ball_velocity_y;
+  Target *targets;
 } State;
 
 State init_state();
