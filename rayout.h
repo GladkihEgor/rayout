@@ -4,14 +4,26 @@
 #include <stdlib.h>
 #include <raylib.h>
 
-#define WINDOW_W      800
-#define WINDOW_H      600
-#define TARGET_ROWS   3
-#define TARGET_COLS   5
-#define TARGETS_X     (WINDOW_W / 6)
-#define TARGETS_Y     (WINDOW_H / 10)
-#define TARGETS_COUNT (TARGET_ROWS * TARGET_COLS)
-#define BAR_SPEED     250
+#define WINDOW_W 800
+#define WINDOW_H 600
+
+#define BALL_RADIUS   10
+#define BALL_VELOCITY 200
+
+#define BAR_SPEED  250
+#define BAR_WIDTH  100
+#define BAR_HEIGHT 20
+
+#define TARGET_WIDTH  BAR_WIDTH
+#define TARGET_HEIGHT BAR_HEIGHT
+
+#define TARGETS_ROWS    3
+#define TARGETS_COLS    5
+#define TARGETS_COUNT   (TARGETS_ROWS * TARGETS_COLS)
+#define TARGETS_X       (WINDOW_W / 6)
+#define TARGETS_Y       (WINDOW_H / 10)
+#define TARGETS_PADDING 10
+
 
 typedef struct {
   Vector2 center;
