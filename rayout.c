@@ -22,7 +22,7 @@ Target *init_targets()
 State init_state()
 {
   State state = {0};
-  state.start = false;
+  state.game_state = PAUSE;
 
   Rectangle bar = {.x=WINDOW_W/2 - BAR_WIDTH/2, .y=WINDOW_H-BAR_HEIGHT, .width=BAR_WIDTH, .height=BAR_HEIGHT};
   state.bar = bar;
@@ -69,29 +69,34 @@ void ball_horizontal_collision(State *s, float dt)
   s->ball.center = nc;
 }
 
-void ball_vertical_collision(State *s, float dt)
+Collision ball_vertical_collision(State *s, float dt)
 {
   int ny = s->ball.center.y + dt * s->ball_velocity_y;
-  if (ny - s->ball.radius < 0 || ny + s->ball.radius > WINDOW_H) {
+  if (ny + s->ball.radius > WINDOW_H) {
     s->ball_velocity_y *= -1;
-    return;
+    return BOT;
+  }
+  if (ny - s->ball.radius < 0) {
+    s->ball_velocity_y *= -1;
+    return TOP;
   }
 
   Vector2 nc = {.x = s->ball.center.x, .y = ny};
   if (CheckCollisionCircleRec(nc, s->ball.radius, s->bar)) {
     s->ball_velocity_y *= -1;
-    return;
+    return BAR;
   }
 
   for (int i = 0; i < TARGETS_COUNT; i += 1) {
     if (s->targets[i].alive && CheckCollisionCircleRec(nc, s->ball.radius, s->targets[i].rect)) {
       s->targets[i].alive = false;
       s->ball_velocity_y *= -1;
-      return;
+      return TARGET;
     }
   }
 
   s->ball.center = nc;
+  return NONE;
 }
 
 void bar_collision(State *s, float dt)
@@ -103,18 +108,45 @@ void bar_collision(State *s, float dt)
   s->bar = nb;
 }
 
+bool all_targets_died(State *s)
+{
+  for (size_t i = 0; i < TARGETS_COUNT; i+=1) {
+    if (s->targets[i].alive) return false;
+  }
+  return true;
+}
+
 void update_state(State *s, float dt)
 {
-  if (IsKeyPressed(KEY_SPACE)) s->start = !s->start;
+  if (IsKeyPressed(KEY_SPACE)) {
+    if (s->game_state == PLAY) s->game_state = PAUSE;
+    else s->game_state = PLAY;
+  };
 
-  if (s->start) {
+  switch (s->game_state) {
+  case PLAY: {
     if (IsKeyDown(KEY_RIGHT)) s->bar_speed = BAR_SPEED;
     else if (IsKeyDown(KEY_LEFT)) s->bar_speed = -BAR_SPEED;
     else s->bar_speed = 0;
 
     ball_horizontal_collision(s, dt);
-    ball_vertical_collision(s, dt);
+    switch (ball_vertical_collision(s, dt)) {
+    case BOT:{
+      release_state(s);
+      *s = init_state();
+      s->game_state = LOSE;
+    } return;
+    default: break;
+    }
     bar_collision(s, dt);
+
+    if (all_targets_died(s)) {
+      release_state(s);
+      *s = init_state();
+      s->game_state = WIN;
+    }
+  } break;
+  default: break;
   }
 }
 
@@ -126,4 +158,16 @@ void render(const State *s)
       DrawRectangleRec(s->targets[i].rect, WHITE);
   DrawRectangleRec(s->bar, GREEN);
   DrawCircleV(s->ball.center, s->ball.radius, RED);
+  switch (s->game_state) {
+  case LOSE: {
+    DrawText("WASTED", 0, 0, 32, WHITE);
+  } break;
+  case WIN: {
+    DrawText("CONGRATULATIONS", 0, 0, 32, WHITE);
+  } break;
+  case PAUSE: {
+    DrawText("PAUSE", 0, 0, 32, WHITE);
+  } break;
+  default: break;
+  }
 }

@@ -35,8 +35,25 @@ typedef struct {
   bool alive;
 } Target;
 
+typedef enum {
+  NONE,
+  TOP,
+  BOT,
+  LEFT,
+  RIGHT,
+  BAR,
+  TARGET,
+} Collision;
+
+typedef enum {
+  PAUSE,
+  PLAY,
+  LOSE,
+  WIN,
+} GameState;
+
 typedef struct {
-  bool start;
+  GameState game_state;
 
   Rectangle bar;
   float bar_speed;
