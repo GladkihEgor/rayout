@@ -11,6 +11,7 @@
 #define TARGETS_X     (WINDOW_W / 6)
 #define TARGETS_Y     (WINDOW_H / 10)
 #define TARGETS_COUNT (TARGET_ROWS * TARGET_COLS)
+#define BAR_SPEED     250
 
 typedef struct {
   Vector2 center;
@@ -24,6 +25,7 @@ typedef struct {
 
 typedef struct {
   Rectangle bar;
+  float bar_speed;
   Ball ball;
   float ball_velocity_x;
   float ball_velocity_y;

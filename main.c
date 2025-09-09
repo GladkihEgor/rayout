@@ -55,5 +55,4 @@ int main()
   return 0;
 }
 
-// TODO: bug if ball will collide with the bar on the side
 // TODO: make all sizes relative on window size
