@@ -24,6 +24,8 @@ typedef struct {
 } Target;
 
 typedef struct {
+  bool start;
+
   Rectangle bar;
   float bar_speed;
   Ball ball;

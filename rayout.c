@@ -13,6 +13,8 @@ void init_targets(Target *targets, int rows, int cols, int w, int h, int x, int 
 State init_state()
 {
   State state = {0};
+  state.start = false;
+
   Rectangle bar = {.x=WINDOW_W/2, .y=WINDOW_H-20, .width=100, .height=20};
   state.bar = bar;
   state.bar_speed = 0;
@@ -95,13 +97,17 @@ void bar_collision(State *s, float dt)
 
 void update_state(State *s, float dt)
 {
-  if (IsKeyDown(KEY_RIGHT)) s->bar_speed = BAR_SPEED;
-  else if (IsKeyDown(KEY_LEFT)) s->bar_speed = -BAR_SPEED;
-  else s->bar_speed = 0;
+  if (IsKeyPressed(KEY_SPACE)) s->start = !s->start;
 
-  ball_horizontal_collision(s, dt);
-  ball_vertical_collision(s, dt);
-  bar_collision(s, dt);
+  if (s->start) {
+    if (IsKeyDown(KEY_RIGHT)) s->bar_speed = BAR_SPEED;
+    else if (IsKeyDown(KEY_LEFT)) s->bar_speed = -BAR_SPEED;
+    else s->bar_speed = 0;
+
+    ball_horizontal_collision(s, dt);
+    ball_vertical_collision(s, dt);
+    bar_collision(s, dt);
+  }
 }
 
 void render(const State *s)
