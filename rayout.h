@@ -4,8 +4,14 @@
 #include <stdlib.h>
 #include <raylib.h>
 
-#define WINDOW_W 800
+#define WINDOW_W 1600
 #define WINDOW_H (WINDOW_W * 3 / 4)
+
+#define PAUSE_TEXT "PAUSE"
+#define LOSE_TEXT  "WASTED"
+#define WIN_TEXT   "WIN"
+#define FONT_SIZE  (WINDOW_W / 5)
+#define FONT_Y     (WINDOW_H/2 + FONT_SIZE/2)
 
 #define BALL_RADIUS   (WINDOW_W / 80)
 #define BALL_VELOCITY (WINDOW_W / 4)

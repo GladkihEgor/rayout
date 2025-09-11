@@ -155,18 +155,21 @@ void render(const State *s)
   ClearBackground(BLACK);
   for (int i = 0; i < TARGETS_COUNT; i += 1)
     if (s->targets[i].alive)
-      DrawRectangleRec(s->targets[i].rect, WHITE);
+      DrawRectangleRec(s->targets[i].rect, BLUE);
   DrawRectangleRec(s->bar, GREEN);
   DrawCircleV(s->ball.center, s->ball.radius, RED);
   switch (s->game_state) {
   case LOSE: {
-    DrawText("WASTED", 0, 0, 32, WHITE);
+    int text_w = MeasureText(LOSE_TEXT, FONT_SIZE);
+    DrawText(LOSE_TEXT, (WINDOW_W - text_w) / 2, FONT_Y, FONT_SIZE, WHITE);
   } break;
   case WIN: {
-    DrawText("CONGRATULATIONS", 0, 0, 32, WHITE);
+    int text_w = MeasureText(WIN_TEXT, FONT_SIZE);
+    DrawText(WIN_TEXT, (WINDOW_W - text_w) / 2, FONT_Y, FONT_SIZE, WHITE);
   } break;
   case PAUSE: {
-    DrawText("PAUSE", 0, 0, 32, WHITE);
+    int text_w = MeasureText(PAUSE_TEXT, FONT_SIZE);
+    DrawText(PAUSE_TEXT, (WINDOW_W - text_w) / 2, FONT_Y, FONT_SIZE, WHITE);
   } break;
   default: break;
   }
