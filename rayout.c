@@ -11,9 +11,9 @@ Target *init_targets()
     for (int c = 0; c < TARGETS_COLS; c += 1) {
       int i = r*TARGETS_COLS + c;
       assert(i < TARGETS_COUNT && "Ups something wrong");
-      int x = c*(TARGET_WIDTH + TARGETS_PADDING) + TARGETS_X;
-      int y = r*(TARGET_HEIGHT + TARGETS_PADDING) + TARGETS_Y;
-      targets[i] = (Target){.rect = {.x = x, .y = y, .width = TARGET_WIDTH, .height = TARGET_HEIGHT}, .alive = true};
+      int x = c*(TARGET_W + TARGETS_PADDING) + TARGETS_X;
+      int y = r*(TARGET_H + TARGETS_PADDING) + TARGETS_Y;
+      targets[i] = (Target){.rect = {.x = x, .y = y, .width = TARGET_W, .height = TARGET_H}, .alive = true};
     }
   }
   return targets;
@@ -24,7 +24,7 @@ State init_state()
   State state = {0};
   state.game_state = PAUSE;
 
-  Rectangle bar = {.x=WINDOW_W/2 - BAR_WIDTH/2, .y=WINDOW_H-BAR_HEIGHT, .width=BAR_WIDTH, .height=BAR_HEIGHT};
+  Rectangle bar = {.x=WINDOW_W/2 - BAR_W/2, .y=WINDOW_H-BAR_H, .width=BAR_W, .height=BAR_H};
   state.bar = bar;
   state.bar_speed = 0;
   Ball ball = {.center = {.x = WINDOW_W/2, .y = WINDOW_H - bar.height - BALL_RADIUS - 1}, .radius = BALL_RADIUS};

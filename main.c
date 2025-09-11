@@ -54,5 +54,3 @@ int main()
   if (dlclose(rayout) == -1) TraceLog(LOG_FATAL, "Can't close rayout dll:%s\n", dlerror());
   return 0;
 }
-
-// TODO: make all sizes relative on window size

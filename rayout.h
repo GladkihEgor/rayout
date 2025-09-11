@@ -5,24 +5,26 @@
 #include <raylib.h>
 
 #define WINDOW_W 800
-#define WINDOW_H 600
+#define WINDOW_H (WINDOW_W * 3 / 4)
 
-#define BALL_RADIUS   10
-#define BALL_VELOCITY 200
+#define BALL_RADIUS   (WINDOW_W / 80)
+#define BALL_VELOCITY (WINDOW_W / 4)
 
-#define BAR_SPEED  250
-#define BAR_WIDTH  100
-#define BAR_HEIGHT 20
+#define BAR_SPEED  (WINDOW_W / 3)
+#define BAR_W      (WINDOW_W / 8)
+#define BAR_H      (WINDOW_H / 30)
 
-#define TARGET_WIDTH  BAR_WIDTH
-#define TARGET_HEIGHT BAR_HEIGHT
+#define TARGET_W BAR_W
+#define TARGET_H BAR_H
 
-#define TARGETS_ROWS    3
-#define TARGETS_COLS    5
+#define TARGETS_COLS    (WINDOW_W / 160)
+#define TARGETS_ROWS    (WINDOW_H / 120)
 #define TARGETS_COUNT   (TARGETS_ROWS * TARGETS_COLS)
-#define TARGETS_X       (WINDOW_W / 6)
-#define TARGETS_Y       (WINDOW_H / 10)
-#define TARGETS_PADDING 10
+#define TARGETS_PADDING (BALL_RADIUS * 3)
+#define TARGETS_W       (TARGETS_COLS * TARGET_W + (TARGETS_COLS - 1) * TARGETS_PADDING)
+#define TARGETS_H       (TARGETS_ROWS * TARGET_H + (TARGETS_ROWS - 1) * TARGETS_PADDING)
+#define TARGETS_X       (WINDOW_W/2 - TARGETS_W/2)
+#define TARGETS_Y       (WINDOW_H/4 - TARGETS_H/2)
 
 
 typedef struct {
