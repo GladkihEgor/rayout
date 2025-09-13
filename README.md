@@ -1,5 +1,7 @@
 # rayout
 
+![rayout](./rayout.png)
+
 Breakout implementation in raylib for education purpose.
 
 ## Quick start
