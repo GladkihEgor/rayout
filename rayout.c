@@ -125,9 +125,10 @@ void update_state(State *s, float dt)
 
   switch (s->game_state) {
   case PLAY: {
-    if (IsKeyDown(KEY_RIGHT)) s->bar_speed = BAR_SPEED;
-    else if (IsKeyDown(KEY_LEFT)) s->bar_speed = -BAR_SPEED;
+    if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)) s->bar_speed = BAR_SPEED;
+    else if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A)) s->bar_speed = -BAR_SPEED;
     else s->bar_speed = 0;
+    if (IsKeyDown(KEY_LEFT_SHIFT) || IsKeyDown(KEY_RIGHT_SHIFT)) s->bar_speed *= 2;
 
     ball_horizontal_collision(s, dt);
     switch (ball_vertical_collision(s, dt)) {
