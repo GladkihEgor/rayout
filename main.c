@@ -5,6 +5,7 @@
 
 int main()
 {
+#ifdef DEBUG
   void *rayout = dlopen("librayout.dylib", 0);
   if (rayout == NULL) TraceLog(LOG_FATAL, "Can't open rayout dll:%s\n", dlerror());
 
@@ -23,11 +24,13 @@ int main()
   const char* render_name = "render";
   void (*render)(State*) = dlsym(rayout, render_name);
   if (render == NULL) TraceLog(LOG_FATAL, "Can't find %s symbol in rayout dll:%s\n", render_name, dlerror());
+#endif
 
   State state = init_state();
   InitWindow(WINDOW_W, WINDOW_H, "rayout");
   SetTargetFPS(60);
   while (!WindowShouldClose()) {
+#ifdef DEBUG
     if (IsKeyDown(KEY_R)) {
       if (dlclose(rayout) == -1) TraceLog(LOG_FATAL, "Can't close rayout dll:%s\n", dlerror());
       rayout = dlopen("librayout.dylib", 0);
@@ -41,6 +44,7 @@ int main()
       if (update_state == NULL) TraceLog(LOG_FATAL, "Can't find %s symbol in rayout dll:%s\n", update_state_name, dlerror());
       if (render == NULL) TraceLog(LOG_FATAL, "Can't find %s symbol in rayout dll:%s\n", render_name, dlerror());
     }
+#endif
 
     float dt = GetFrameTime();
     update_state(&state, dt);
@@ -51,6 +55,8 @@ int main()
   }
 
   release_state(&state);
+#ifdef DEBUG
   if (dlclose(rayout) == -1) TraceLog(LOG_FATAL, "Can't close rayout dll:%s\n", dlerror());
+#endif
   return 0;
 }

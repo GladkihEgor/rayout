@@ -39,12 +39,13 @@ int main(int argc, char **argv)
     cmd_append(&cmd, "-I./raylib-5.5_macos/include");
     cmd_append(&cmd, "-L./raylib-5.5_macos/lib", "-lraylib");
     if (!cmd_run(&cmd)) return 1;
-    
+
     nob_cc(&cmd);
     nob_cc_flags(&cmd);
     cmd_append(&cmd,"-ggdb");
     nob_cc_output(&cmd, "rayout");
     nob_cc_inputs(&cmd, "main.c");
+    cmd_append(&cmd, "-DDEBUG");
     cmd_append(&cmd, "-I./raylib-5.5_macos/include");
     cmd_append(&cmd, "-L./raylib-5.5_macos/lib", "-lraylib");
     cmd_append(&cmd, "-Wl,-rpath,./raylib-5.5_macos/lib");
