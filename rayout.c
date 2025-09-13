@@ -61,7 +61,7 @@ void ball_horizontal_collision(State *s, float dt)
   for (int i = 0; i < TARGETS_COUNT; i += 1) {
     if (s->targets[i].alive && CheckCollisionCircleRec(nc, s->ball.radius, s->targets[i].rect)) {
       s->targets[i].alive = false;
-      s->ball_velocity_x *= -1;
+      s->ball_velocity_x *= -1.05;
       return;
     }
   }
@@ -90,7 +90,7 @@ Collision ball_vertical_collision(State *s, float dt)
   for (int i = 0; i < TARGETS_COUNT; i += 1) {
     if (s->targets[i].alive && CheckCollisionCircleRec(nc, s->ball.radius, s->targets[i].rect)) {
       s->targets[i].alive = false;
-      s->ball_velocity_y *= -1;
+      s->ball_velocity_y *= -1.05;
       return TARGET;
     }
   }
